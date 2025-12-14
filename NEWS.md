@@ -1,3 +1,33 @@
+# flir 0.6.0
+
+## New features
+
+* New linters:
+
+  + `expect_s3_class_linter()` (@trevorld, #110)
+  + `expect_s4_class_linter()` (@trevorld, #109)
+  + `nzchar_linter()` (@trevorld, #102)
+  + `vector_logic_linter()` (@trevorld, #111)
+
+* New vignette "Tips and tricks" that lists some solutions for problems one may
+  encounter when writing new rules (#94).
+
+## Bug fixes
+
+* When using external rules with the `with-<pkg>` syntax, if the YAML file
+  contains several rules separated by "---", then `flir` would only use the
+  first one. This is now fixed (#95).
+
+* `list_linters()` now uses `path = "."` by default (#99).
+
+* `lint_text()` and `fix_text()` now work correctly with custom rules when the
+  working directory is neither an R package nor an RStudio project (#119).
+
+## Changes
+
+* `expect_type_linter()` now has less false positives for non-type `is.*()` functions
+  and also provides more fixes (@trevorld, #110).
+
 # flir 0.5.0
 
 This is the first CRAN release.

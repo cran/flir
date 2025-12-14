@@ -1,31 +1,23 @@
 test_that("equals_na_linter skips allowed usages", {
   linter <- equals_na_linter()
 
-  expect_lint("blah", NULL, linter)
-  expect_lint("  blah", NULL, linter)
-  expect_lint("  blah", NULL, linter)
-  expect_lint("x == 'NA'", NULL, linter)
-  expect_lint("x <- NA", NULL, linter)
-  expect_lint("x <- NaN", NULL, linter)
-  expect_lint("x <- NA_real_", NULL, linter)
-  expect_lint("is.na(x)", NULL, linter)
-  expect_lint("is.nan(x)", NULL, linter)
-  expect_lint("x[!is.na(x)]", NULL, linter)
+  expect_no_lint("blah", linter)
+  expect_no_lint("  blah", linter)
+  expect_no_lint("  blah", linter)
+  expect_no_lint("x == 'NA'", linter)
+  expect_no_lint("x <- NA", linter)
+  expect_no_lint("x <- NaN", linter)
+  expect_no_lint("x <- NA_real_", linter)
+  expect_no_lint("is.na(x)", linter)
+  expect_no_lint("is.nan(x)", linter)
+  expect_no_lint("x[!is.na(x)]", linter)
 
   # equals_na_linter should ignore strings and comments
-  expect_lint(
-    "is.na(x) # do not flag x == NA if inside a comment",
-    NULL,
-    linter
-  )
-  expect_lint(
-    "lint_msg <- 'do not flag x == NA if inside a string'",
-    NULL,
-    linter
-  )
+  expect_no_lint("is.na(x) # do not flag x == NA if inside a comment", linter)
+  expect_no_lint("lint_msg <- 'do not flag x == NA if inside a string'", linter)
 
   # nested NAs are okay
-  expect_lint("x==f(1, ignore = NA)", NULL, linter)
+  expect_no_lint("x==f(1, ignore = NA)", linter)
 })
 
 skip_if_not_installed("tibble")
@@ -37,39 +29,17 @@ patrick::with_parameters_test_that(
     NULL
   ),
   .cases = tibble::tribble(
-    ~.test_name,
-    ~operation,
-    ~type_na,
-    "equality, logical NA",
-    "==",
-    "NA",
-    "equality, integer NA",
-    "==",
-    "NA_integer_",
-    "equality, real NA",
-    "==",
-    "NA_real_",
-    "equality, complex NA",
-    "==",
-    "NA_complex_",
-    "equality, character NA",
-    "==",
-    "NA_character_",
-    "inequality, logical NA",
-    "!=",
-    "NA",
-    "inequality, integer NA",
-    "!=",
-    "NA_integer_",
-    "inequality, real NA",
-    "!=",
-    "NA_real_",
-    "inequality, complex NA",
-    "!=",
-    "NA_complex_",
-    "inequality, character NA",
-    "!=",
-    "NA_character_"
+    ~.test_name                , ~operation , ~type_na        ,
+    "equality, logical NA"     , "=="       , NA              ,
+    "equality, integer NA"     , "=="       , "NA_integer_"   ,
+    "equality, real NA"        , "=="       , "NA_real_"      ,
+    "equality, complex NA"     , "=="       , "NA_complex_"   ,
+    "equality, character NA"   , "=="       , "NA_character_" ,
+    "inequality, logical NA"   , "!="       , NA              ,
+    "inequality, integer NA"   , "!="       , "NA_integer_"   ,
+    "inequality, real NA"      , "!="       , "NA_real_"      ,
+    "inequality, complex NA"   , "!="       , "NA_complex_"   ,
+    "inequality, character NA" , "!="       , "NA_character_"
   )
 )
 

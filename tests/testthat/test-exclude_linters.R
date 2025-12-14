@@ -1,7 +1,6 @@
 test_that("lint: argument 'exclude_linters' works", {
-  expect_lint(
+  expect_no_lint(
     "any(duplicated(x))",
-    NULL,
     linter = NULL,
     exclude_linters = "any_duplicated"
   )

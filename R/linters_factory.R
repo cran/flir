@@ -262,6 +262,42 @@ makeActiveBinding(
 )
 
 
+#' @inherit lintr::expect_s3_class_linter title
+#' @description
+#' See <https://lintr.r-lib.org/reference/expect_s3_class_linter>.
+
+#' @usage expect_s3_class_linter
+#' @name expect_s3_class_linter
+#' @export
+#' @return The name of the linter
+NULL
+makeActiveBinding(
+  'expect_s3_class_linter',
+  function() {
+    function() 'expect_s3_class'
+  },
+  env = environment()
+)
+
+
+#' @inherit lintr::expect_s4_class_linter title
+#' @description
+#' See <https://lintr.r-lib.org/reference/expect_s4_class_linter>.
+
+#' @usage expect_s4_class_linter
+#' @name expect_s4_class_linter
+#' @export
+#' @return The name of the linter
+NULL
+makeActiveBinding(
+  'expect_s4_class_linter',
+  function() {
+    function() 'expect_s4_class'
+  },
+  env = environment()
+)
+
+
 #' @inherit lintr::expect_true_false_linter title
 #' @description
 #' See <https://lintr.r-lib.org/reference/expect_true_false_linter>.
@@ -548,6 +584,24 @@ makeActiveBinding(
 )
 
 
+#' @inherit lintr::nzchar_linter title
+#' @description
+#' See <https://lintr.r-lib.org/reference/nzchar_linter>.
+
+#' @usage nzchar_linter
+#' @name nzchar_linter
+#' @export
+#' @return The name of the linter
+NULL
+makeActiveBinding(
+  'nzchar_linter',
+  function() {
+    function() 'nzchar'
+  },
+  env = environment()
+)
+
+
 #' @inherit lintr::outer_negation_linter title
 #' @description
 #' See <https://lintr.r-lib.org/reference/outer_negation_linter>.
@@ -829,6 +883,24 @@ makeActiveBinding(
   'unnecessary_nesting_linter',
   function() {
     function() 'unnecessary_nesting'
+  },
+  env = environment()
+)
+
+
+#' @inherit lintr::vector_logic_linter title
+#' @description
+#' See <https://lintr.r-lib.org/reference/vector_logic_linter>.
+
+#' @usage vector_logic_linter
+#' @name vector_logic_linter
+#' @export
+#' @return The name of the linter
+NULL
+makeActiveBinding(
+  'vector_logic_linter',
+  function() {
+    function() 'vector_logic'
   },
   env = environment()
 )

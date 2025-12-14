@@ -1,8 +1,8 @@
 test_that("redundant_equals_linter skips allowed usages", {
   # comparisons to non-logical constants
-  expect_lint("x == 1", NULL, redundant_equals_linter())
+  expect_no_lint("x == 1", redundant_equals_linter())
   # comparison to TRUE as a string
-  expect_lint("x != 'TRUE'", NULL, redundant_equals_linter())
+  expect_no_lint("x != 'TRUE'", redundant_equals_linter())
 })
 
 test_that("multiple lints return correct custom messages", {
@@ -38,20 +38,10 @@ patrick::with_parameters_test_that(
     expect_lint(code, lint_msg, redundant_equals_linter())
   },
   .cases = tibble::tribble(
-    ~.test_name,
-    ~op,
-    ~bool,
-    "==, TRUE",
-    "==",
-    "TRUE",
-    "==, FALSE",
-    "==",
-    "FALSE",
-    "!=, TRUE",
-    "!=",
-    "TRUE",
-    "!=, FALSE",
-    "!=",
-    "FALSE"
+    ~.test_name , ~op  , ~bool   ,
+    "==, TRUE"  , "==" , "TRUE"  ,
+    "==, FALSE" , "==" , "FALSE" ,
+    "!=, TRUE"  , "!=" , "TRUE"  ,
+    "!=, FALSE" , "!=" , "FALSE"
   )
 )

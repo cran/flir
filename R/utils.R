@@ -58,7 +58,7 @@ get_tests_from_lintr <- function(name) {
     "_linter.R"
   )
   dest <- paste0("tests/testthat/test-", name, ".R")
-  utils::download.file(url, destfile = dest)
+  utils::download.file(url, destfile = dest, mode = "wb")
   if (rlang::is_interactive()) {
     utils::file.edit(dest)
   }
@@ -229,10 +229,12 @@ uses_flir <- function(path = ".") {
     }
   }
   tryCatch(
-    path <- rprojroot::find_root(
-      rprojroot::is_rstudio_project | rprojroot::is_r_package,
-      path = path
-    ),
+    {
+      path <- rprojroot::find_root(
+        rprojroot::is_rstudio_project | rprojroot::is_r_package,
+        path = path
+      )
+    },
     error = function(e) return(FALSE)
   )
   flir_dir <- fs::path(path, "flir")
@@ -248,11 +250,15 @@ get_custom_linters <- function(path = ".") {
     }
   }
   tryCatch(
-    path <- rprojroot::find_root(
-      rprojroot::is_rstudio_project | rprojroot::is_r_package,
-      path = path
-    ),
-    error = function(e) return(FALSE)
+    {
+      path <- rprojroot::find_root(
+        rprojroot::is_rstudio_project | rprojroot::is_r_package,
+        path = path
+      )
+    },
+    error = function(e) {
+      path <<- "."
+    }
   )
   flir_dir <- fs::path(path, "flir")
   if (
@@ -334,6 +340,8 @@ keep_or_exclude_testthat_rules <- function(path, linters) {
       "expect_named",
       "expect_not",
       "expect_null",
+      "expect_s3_class",
+      "expect_s4_class",
       "expect_true_false",
       "expect_type"
     )

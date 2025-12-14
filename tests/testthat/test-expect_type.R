@@ -2,35 +2,25 @@ test_that("expect_type_linter skips allowed usages", {
   linter <- expect_type_linter()
 
   # expect_type doesn't have an inverted version
-  expect_lint("expect_true(!is.numeric(x))", NULL, linter)
+  expect_no_lint("expect_true(!is.numeric(x))", linter)
   # NB: also applies to tinytest, but it's sufficient to test testthat
-  expect_lint("testthat::expect_true(!is.numeric(x))", NULL, linter)
+  expect_no_lint("testthat::expect_true(!is.numeric(x))", linter)
 
   # other is.<x> calls are not suitable for expect_type in particular
-  expect_lint("expect_true(is.data.frame(x))", NULL, linter)
+  expect_no_lint("expect_true(is.data.frame(x))", linter)
 
   # expect_type(x, ...) cannot be cleanly used here:
-  expect_lint(
-    "expect_true(typeof(x) %in% c('builtin', 'closure'))",
-    NULL,
-    linter
-  )
+  expect_no_lint("expect_true(typeof(x) %in% c('builtin', 'closure'))", linter)
 
   # expect_type() doesn't have info= or label= arguments
-  expect_lint(
+  expect_no_lint(
     "expect_equal(typeof(x), t, info = 'x should have type t')",
-    NULL,
     linter
   )
-  expect_lint("expect_equal(typeof(x), t, label = 'x type')", NULL, linter)
-  expect_lint(
-    "expect_equal(typeof(x), t, expected.label = 'type')",
-    NULL,
-    linter
-  )
-  expect_lint(
+  expect_no_lint("expect_equal(typeof(x), t, label = 'x type')", linter)
+  expect_no_lint("expect_equal(typeof(x), t, expected.label = 'type')", linter)
+  expect_no_lint(
     "expect_true(is.double(x), info = 'x should be double')",
-    NULL,
     linter
   )
 })
@@ -139,9 +129,26 @@ test_that("fix works", {
   expect_snapshot(
     fix_text("expect_identical('double', typeof(x))", linters = linter)
   )
+  expect_snapshot(
+    fix_text('expect_true(is.call(x))', linters = linter)
+  )
+  expect_snapshot(
+    fix_text('expect_true(is.function(x))', linters = linter)
+  )
+  expect_snapshot(
+    fix_text('expect_true(is.name(x))', linters = linter)
+  )
+  expect_snapshot(
+    fix_text('expect_true(is.primitive(x))', linters = linter)
+  )
 
-  # Don't fix for this
-  expect_snapshot(fix_text("expect_true(is.complex(foo(x)))", linters = linter))
+  # TODO: https://github.com/etiennebacher/astgrepr/issues/17
+  # expect_snapshot(
+  #   fix_text("expect_true(is.complex(foo(x)))", linters = linter)
+  # )
+  # expect_snapshot(
+  #   fix_text('expect_true(is.double(x))', linters = linter)
+  # )
 })
 
 # Replacement could be mixed up to suggest both expect_type and expect_identical

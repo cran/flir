@@ -6,10 +6,7 @@
 #'
 #' @examples
 #' list_linters(".")
-list_linters <- function(path) {
-  if (missing(path) && is_testing()) {
-    path <- "."
-  }
+list_linters <- function(path = ".") {
   out <- c(
     # "absolute_path", # TODO: really broken, too many false positives, e.g #42
     "any_duplicated",
@@ -27,6 +24,8 @@ list_linters <- function(path) {
     "expect_named",
     "expect_not",
     "expect_null",
+    "expect_s3_class",
+    "expect_s4_class",
     "expect_true_false",
     "expect_type",
     "for_loop_index",
@@ -43,6 +42,7 @@ list_linters <- function(path) {
     "missing_argument",
     "nested_ifelse",
     "numeric_leading_zero",
+    "nzchar",
     "outer_negation",
     "package_hooks",
     "paste",
@@ -62,6 +62,7 @@ list_linters <- function(path) {
     # TODO: I think it should be removed eventually, ast-grep tools is just not
     # the right tool for this. For now, I just leave it opt-in.
     # "unreachable_code",
+    "vector_logic",
     "which_grepl"
   )
   keep_or_exclude_testthat_rules(path, out)

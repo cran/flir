@@ -14,6 +14,8 @@ keep:
   - expect_named
   - expect_not
   - expect_null
+  - expect_s3_class
+  - expect_s4_class
   - expect_true_false
   - expect_type
   - for_loop_index
@@ -30,6 +32,7 @@ keep:
   - missing_argument
   - nested_ifelse
   - numeric_leading_zero
+  - nzchar
   - outer_negation
   - package_hooks
   - paste
@@ -48,4 +51,5 @@ keep:
   - unnecessary_nesting
   # This can be activated, but it is slow.
   # - unreachable_code
+  - vector_logic
   - which_grepl

@@ -1,37 +1,35 @@
 test_that("implicit_assignment_linter skips allowed usages", {
   linter <- implicit_assignment_linter()
 
-  expect_lint("x <- 1L", NULL, linter)
-  expect_lint("1L -> x", NULL, linter)
-  expect_lint("x <<- 1L", NULL, linter)
-  expect_lint("1L ->> x", NULL, linter)
-  expect_lint("y <- if (is.null(x)) z else x", NULL, linter)
-  expect_lint("for (x in 1:10) x <- x + 1", NULL, linter)
+  expect_no_lint("x <- 1L", linter)
+  expect_no_lint("1L -> x", linter)
+  expect_no_lint("x <<- 1L", linter)
+  expect_no_lint("1L ->> x", linter)
+  expect_no_lint("y <- if (is.null(x)) z else x", linter)
+  expect_no_lint("for (x in 1:10) x <- x + 1", linter)
 
-  expect_lint("abc <- mean(1:4)", NULL, linter)
-  expect_lint("mean(1:4) -> abc", NULL, linter)
+  expect_no_lint("abc <- mean(1:4)", linter)
+  expect_no_lint("mean(1:4) -> abc", linter)
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     x <- 1:4
     mean(x)"
     ),
-    NULL,
     linter
   )
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     x <- 1L
     if (x) TRUE"
     ),
-    NULL,
     linter
   )
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     0L -> abc
@@ -39,22 +37,20 @@ test_that("implicit_assignment_linter skips allowed usages", {
       FALSE
     }"
     ),
-    NULL,
     linter
   )
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     if (x > 20L) {
       x <- x / 2.0
     }"
     ),
-    NULL,
     linter
   )
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     i <- 1
@@ -63,11 +59,10 @@ test_that("implicit_assignment_linter skips allowed usages", {
       i <- i + 1
     }"
     ),
-    NULL,
     linter
   )
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     foo <- function(x) {
@@ -75,11 +70,10 @@ test_that("implicit_assignment_linter skips allowed usages", {
       return(x)
     }"
     ),
-    NULL,
     linter
   )
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     f <- function() {
@@ -87,11 +81,10 @@ test_that("implicit_assignment_linter skips allowed usages", {
       p <- if (is.null(p)) x else p
     }"
     ),
-    NULL,
     linter
   )
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
       map(
@@ -102,11 +95,10 @@ test_that("implicit_assignment_linter skips allowed usages", {
         }
       )"
     ),
-    NULL,
     linter
   )
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
       lapply(1:4, function(x) {
@@ -114,12 +106,11 @@ test_that("implicit_assignment_linter skips allowed usages", {
         x
       })"
     ),
-    NULL,
     linter
   )
 
   skip_if_not_r_version("4.1.0")
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
       map(1:4, \\(x) {
@@ -127,7 +118,6 @@ test_that("implicit_assignment_linter skips allowed usages", {
         x
       })"
     ),
-    NULL,
     linter
   )
 })
@@ -167,7 +157,7 @@ test_that("implicit_assignment_linter skips allowed usages", {
 test_that("implicit_assignment_linter skips allowed usages with braces", {
   linter <- implicit_assignment_linter()
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     foo({
@@ -175,10 +165,9 @@ test_that("implicit_assignment_linter skips allowed usages with braces", {
     })
     "
     ),
-    NULL,
     linter
   )
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     output <- capture.output({
@@ -186,10 +175,9 @@ test_that("implicit_assignment_linter skips allowed usages with braces", {
     })
     "
     ),
-    NULL,
     linter
   )
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     quote({
@@ -197,10 +185,9 @@ test_that("implicit_assignment_linter skips allowed usages with braces", {
     })
     "
     ),
-    NULL,
     linter
   )
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     bquote({
@@ -208,10 +195,9 @@ test_that("implicit_assignment_linter skips allowed usages with braces", {
     })
     "
     ),
-    NULL,
     linter
   )
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     expression({
@@ -219,10 +205,9 @@ test_that("implicit_assignment_linter skips allowed usages with braces", {
     })
     "
     ),
-    NULL,
     linter
   )
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     local({
@@ -230,7 +215,6 @@ test_that("implicit_assignment_linter skips allowed usages with braces", {
     })
     "
     ),
-    NULL,
     linter
   )
 })
@@ -238,7 +222,7 @@ test_that("implicit_assignment_linter skips allowed usages with braces", {
 test_that("implicit_assignment_linter makes exceptions for functions that capture side-effects", {
   linter <- implicit_assignment_linter()
 
-  expect_lint(
+  expect_no_lint(
     trim_some(
       "
     test_that('my test', {
@@ -246,14 +230,13 @@ test_that("implicit_assignment_linter makes exceptions for functions that captur
       expect_equal(a, 1L)
     })"
     ),
-    NULL,
     linter
   )
 
   # rlang
-  expect_lint("expr(a <- 1L)", NULL, linter)
-  expect_lint("quo(a <- 1L)", NULL, linter)
-  expect_lint("quos(a <- 1L)", NULL, linter)
+  expect_no_lint("expr(a <- 1L)", linter)
+  expect_no_lint("quo(a <- 1L)", linter)
+  expect_no_lint("quos(a <- 1L)", linter)
 })
 
 test_that("implicit_assignment_linter blocks disallowed usages in simple conditional statements", {
@@ -374,15 +357,15 @@ test_that("implicit_assignment_linter blocks disallowed usages in nested conditi
 test_that("implicit_assignment_linter works as expected with pipes and walrus operator", {
   linter <- implicit_assignment_linter()
 
-  expect_lint("data %>% mutate(a := b)", NULL, linter)
-  expect_lint("dt %>% .[, z := x + y]", NULL, linter)
-  expect_lint("data %<>% mutate(a := b)", NULL, linter)
+  expect_no_lint("data %>% mutate(a := b)", linter)
+  expect_no_lint("dt %>% .[, z := x + y]", linter)
+  expect_no_lint("data %<>% mutate(a := b)", linter)
 
-  expect_lint("DT[i, x := i]", NULL, linter)
+  expect_no_lint("DT[i, x := i]", linter)
 
   skip_if_not_r_version("4.1.0")
 
-  expect_lint("data |> mutate(a := b)", NULL, linter)
+  expect_no_lint("data |> mutate(a := b)", linter)
 })
 
 test_that("parenthetical assignments are caught", {
